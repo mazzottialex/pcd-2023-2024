@@ -5,17 +5,21 @@ public class Worker extends Thread {
 	
 	private UnsafeCounter counter;
 	private int ntimes;
-	
-	public Worker(String name, UnsafeCounter counter, int ntimes){
+	private Object lock;
+
+	public Worker(String name, UnsafeCounter counter, int ntimes, Object lock){
 		super(name);
 		this.counter = counter;
 		this.ntimes = ntimes;
+		this.lock = lock;
 	}
 	
 	public void run(){
 		log("started");
 		for (int i = 0; i < ntimes; i++){
-			counter.inc();
+			synchronized(lock){
+				counter.inc();
+			}
 		}
 		log("completed");
 	}
